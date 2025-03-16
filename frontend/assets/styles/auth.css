@@ -1,0 +1,81 @@
+.auth-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.auth-container {
+  background: azure;
+  padding: 20px;
+  text-align: center;
+  width: 40%;
+  box-shadow: 5px 5px var(--primary-color-transparent);
+  border-width: 1px 1.6px 1.6px 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+.auth-container h2 {
+  margin-bottom: 16px;
+  color: var(--text-color);
+}
+
+.auth-container .register-form-section,
+.auth-container .login-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-container .register-form-section .register-form-fields-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.auth-container button {
+  width: 100%;
+  padding: 10px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  box-shadow: 5px 5px var(--primary-color-transparent);
+  border-width: 1px 1.6px 1.6px 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+.auth-container button:hover {
+  background: var(--primary-color-hover);
+}
+
+.auth-container p {
+  margin-top: 10px;
+}
+
+.auth-container a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-container a:hover {
+  text-decoration: underline;
+}
