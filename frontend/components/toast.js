@@ -1,4 +1,3 @@
-// Toast Manager
 const createToastContainer = () => {
   let container = document.getElementById("toast-container");
   if (!container) {

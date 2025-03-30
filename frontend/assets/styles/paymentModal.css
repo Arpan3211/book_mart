@@ -13,8 +13,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  
 }
 
 .modal-content {
@@ -33,30 +31,27 @@
   border-color: black;
 }
 
-/* Thin scrollbar with transparent background */
 .modal-content::-webkit-scrollbar {
-  width: 4px; /* Very thin scrollbar */
+  width: 4px;
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: transparent; /* Transparent scrollbar track */
+  background: transparent;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3); /* Subtle scrollbar color */
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+  background: rgba(0, 0, 0, 0.5);
 }
 
-/* For Firefox */
 .modal-content {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
-
 
 @keyframes fadeIn {
   from {
@@ -136,7 +131,11 @@ h3 {
 }
 
 .modal-header {
-  background: linear-gradient(135deg, var(--primary-color-transparent), #01b7ff);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color-transparent),
+    #01b7ff
+  );
   color: black;
   padding: 15px 20px;
   font-size: 1.2rem;
@@ -169,12 +168,12 @@ h3 {
   color: white;
 }
 
-.loader-wrapper{
-display: flex;
-justify-content: center;
-align-items: center;
-width: 100%;
-height: 40vh;
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40vh;
 }
 
 .loader {
@@ -185,24 +184,24 @@ height: 40vh;
   height: 58px;
   color: var(--secondary-color);
 }
-  .loader:before,
-  .loader:after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: inherit;
-    height: inherit;
-    border-radius: 50%;
-    transform: rotateX(70deg);
-    animation: 1s spin linear infinite;
-  }
-  .loader:after {
-    color: var(--primary-color);
-    transform: rotateY(70deg);
-    animation-delay: .4s;
-  }
+.loader:before,
+.loader:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  animation: 1s spin linear infinite;
+}
+.loader:after {
+  color: var(--primary-color);
+  transform: rotateY(70deg);
+  animation-delay: 0.4s;
+}
 
 @keyframes rotate {
   0% {
@@ -225,27 +224,27 @@ height: 40vh;
 @keyframes spin {
   0%,
   100% {
-    box-shadow: .2em 0px 0 0px currentcolor;
+    box-shadow: 0.2em 0px 0 0px currentcolor;
   }
   12% {
-    box-shadow: .2em .2em 0 0 currentcolor;
+    box-shadow: 0.2em 0.2em 0 0 currentcolor;
   }
   25% {
-    box-shadow: 0 .2em 0 0px currentcolor;
+    box-shadow: 0 0.2em 0 0px currentcolor;
   }
   37% {
-    box-shadow: -.2em .2em 0 0 currentcolor;
+    box-shadow: -0.2em 0.2em 0 0 currentcolor;
   }
   50% {
-    box-shadow: -.2em 0 0 0 currentcolor;
+    box-shadow: -0.2em 0 0 0 currentcolor;
   }
   62% {
-    box-shadow: -.2em -.2em 0 0 currentcolor;
+    box-shadow: -0.2em -0.2em 0 0 currentcolor;
   }
   75% {
-    box-shadow: 0px -.2em 0 0 currentcolor;
+    box-shadow: 0px -0.2em 0 0 currentcolor;
   }
   87% {
-    box-shadow: .2em -.2em 0 0 currentcolor;
+    box-shadow: 0.2em -0.2em 0 0 currentcolor;
   }
 }

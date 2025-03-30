@@ -1,5 +1,5 @@
 import { showToast } from "./toast.js";
-import { fetchUserDetails } from "../assets/scripts/api.js";
+import { fetchUserDetails, placeOrder } from "../assets/scripts/api.js";
 
 export async function showPaymentModal() {
   const userId = localStorage.getItem("userId") || "guest";
@@ -11,8 +11,8 @@ export async function showPaymentModal() {
     ? parseFloat(totalElement.textContent.replace("Total: ₹", ""))
     : 0;
 
-  if (totalAmount <= 0) {
-    showToast("Your cart is empty! Add items to proceed.", "error");
+  if (isNaN(totalAmount) || totalAmount <= 0) {
+    showToast("Invalid total amount. Please check your cart.", "error");
     return;
   }
 
@@ -84,11 +84,17 @@ function showAddressForm(method) {
   modalBody.innerHTML = `
     <h3>Enter Delivery Address</h3>
     <label>Address:</label>
-    <input type="text" id="user-address" class="payment-input" placeholder="Enter your address" value="${savedAddress.address || ''}">
+    <input type="text" id="user-address" class="payment-input" placeholder="Enter your address" value="${
+      savedAddress.address || ""
+    }">
     <label>City:</label>
-    <input type="text" id="user-city" class="payment-input" placeholder="Enter city" value="${savedAddress.city || ''}">
+    <input type="text" id="user-city" class="payment-input" placeholder="Enter city" value="${
+      savedAddress.city || ""
+    }">
     <label>ZIP Code:</label>
-    <input type="text" id="user-zip" class="payment-input" placeholder="Enter ZIP code" value="${savedAddress.zip || ''}">
+    <input type="text" id="user-zip" class="payment-input" placeholder="Enter ZIP code" value="${
+      savedAddress.zip || ""
+    }">
     <button id="save-address" class="payment-modal-all-btn" data-method="${method}">Save Address</button>
     <button id="back-btn" class="payment-modal-all-btn">Back</button>
     <button id="close-modal" class="payment-modal-all-btn">Cancel</button>
@@ -139,7 +145,7 @@ function showPaymentStep(method) {
       <input type="text" id="card-holder" class="payment-input" placeholder="Full Name">
     `;
   }
-  
+
   modalBody.innerHTML = `
     <h2>Complete Your Payment</h2>
     ${paymentFields}
@@ -149,13 +155,59 @@ function showPaymentStep(method) {
   `;
 }
 
-function processPayment(method, totalAmount) {
+async function processPayment(method, totalAmount) {
   const userAddress = JSON.parse(localStorage.getItem("userAddress")) || {};
-  const modalBody = document.getElementById("modal-body");
-  modalBody.innerHTML = "<div class='loader-wrapper'><span class='loader'></span></div>";
+  const userId = localStorage.getItem("userId");
 
-  setTimeout(() => {
-    showToast(`Payment successful via ${method}! Total: ₹${totalAmount}. Delivery Address: ${userAddress.address}, ${userAddress.city}, ${userAddress.zip}`, "success");
-    document.body.removeChild(document.getElementById("payment-modal"));
-  }, 2000);
+  if (!userId) {
+    showToast("User not found. Please log in to proceed.", "error");
+    return;
+  }
+  if (!userAddress.address || !userAddress.city || !userAddress.zip) {
+    showToast(
+      "Please provide a valid address before making a payment.",
+      "error"
+    );
+    return;
+  }
+  if (!totalAmount || Number(totalAmount) <= 0) {
+    showToast("Invalid payment amount. Please check your cart.", "error");
+    return;
+  }
+
+  document.getElementById("modal-body").innerHTML =
+    "<div class='loader-wrapper'><span class='loader'></span></div>";
+
+  try {
+    const result = await placeOrder(
+      userId,
+      method,
+      userAddress,
+      Number(totalAmount)
+    );
+
+    if (result.success) {
+      showToast(
+        `Payment successful via ${method}! Total: ₹${totalAmount}`,
+        "success"
+      );
+      localStorage.removeItem("userAddress");
+
+      setTimeout(() => {
+        window.location.href = "../pages/order.html";
+      }, 1500);
+    } else {
+      showToast(result.message || "Payment failed. Please try again.", "error");
+    }
+  } catch (error) {
+    showToast(
+      error.message || "An unexpected error occurred. Please try again.",
+      "error"
+    );
+  } finally {
+    const modal = document.getElementById("payment-modal");
+    if (modal) {
+      document.body.removeChild(modal);
+    }
+  }
 }
