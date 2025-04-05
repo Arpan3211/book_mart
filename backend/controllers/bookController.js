@@ -65,16 +65,52 @@ export const unmarkAsFavorite = async (req, res) => {
 
 export const getFavoriteBooks = async (req, res) => {
   try {
-    const favoriteBooks = await Book.find({ favorite: true });
-    res.json(favoriteBooks);
+    const userId = req.query.userId;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Get all favorite book IDs for this user
+    const favorites = await Favorite.find({ userId });
+    const favoriteBookIds = favorites.map(fav => fav.bookId);
+
+    if (favoriteBookIds.length === 0) {
+      return res.json([]);
+    }
+
+    // Fetch the actual book details for these IDs
+    const favoriteBooks = await Book.find({ bookId: { $in: favoriteBookIds } });
+
+    // Add the favorite flag to each book
+    const booksWithFavoriteFlag = favoriteBooks.map(book => ({
+      ...book.toObject(),
+      favorite: true
+    }));
+
+    res.json(booksWithFavoriteFlag);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching favorite books", error });
+    console.error("Error fetching favorite books:", error);
+    res.status(500).json({ message: "Error fetching favorite books", error: error.message });
   }
 };
 
 export const addBook = async (req, res) => {
   try {
-    const { title, author, price, image } = req.body;
+    const {
+      title,
+      author,
+      price,
+      image,
+      genre,
+      description,
+      publishedYear,
+      isbn,
+      rating,
+      pages,
+      language
+    } = req.body;
+
     const bookId = uuidv4();
     const newBook = new Book({
       bookId,
@@ -82,8 +118,16 @@ export const addBook = async (req, res) => {
       author,
       price,
       image,
+      genre: genre || "Fiction",
+      description: description || "No description available",
+      publishedYear,
+      isbn,
+      rating: rating || 4,
+      pages,
+      language: language || "English",
       favorite: false,
     });
+
     await newBook.save();
     res.status(201).json({ message: "Book added successfully", book: newBook });
   } catch (error) {
@@ -101,6 +145,10 @@ export const addMultipleBooks = async (req, res) => {
     const booksWithIds = books.map((book) => ({
       bookId: uuidv4(),
       ...book,
+      genre: book.genre || "Fiction",
+      description: book.description || "No description available",
+      rating: book.rating || 4,
+      language: book.language || "English",
       favorite: false,
     }));
 
